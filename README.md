@@ -7,7 +7,6 @@ https://twitter.com/helpwantedbot
 ## Getting Started
 
 First, create a twitter app [here](https://apps.twitter.com/).
-Then create a file in the top level of this directory called `credentials.js`.
 
 ```js
 module.exports = {
