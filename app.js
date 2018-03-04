@@ -1,6 +1,10 @@
 const twit = require('twit');
 const octokit = require('@octokit/rest')();
 
+if(process.env.NODE_ENV !== 'production') {
+  require('dotenv').config()
+}
+
 const config = {
   consumer_key: process.env.CONSUMER_KEY,
   consumer_secret: process.env.CONSUMER_SECRET,

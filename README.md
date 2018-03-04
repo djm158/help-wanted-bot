@@ -8,13 +8,15 @@ https://twitter.com/helpwantedbot
 
 First, create a twitter app [here](https://apps.twitter.com/).
 
-```js
-module.exports = {
-  consumer_key: 'your_consumer_key',
-  consumer_secret: 'your_consumer_secret',
-  access_token: 'your_access_token',
-  access_token_secret: 'your_token_secret'
-}
+In development, the app uses [dotenv](https://github.com/motdotla/dotenv) to source environment variables to authenticate your twitter app. 
+
+.env file:
+
+```
+CONSUMER_KEY=your_consumer_key
+CONSUMER_SECRET=your_consumer_secret
+ACCESS_TOKEN=your_access_token
+ACCESS_TOKEN_SECRET=your_access_token_secret
 ```
 
 Install dependencies and run:
