@@ -14,7 +14,7 @@ deploy:
   role: $ROLE
   publish: true
   zip: deploy.zip
-  runtime: "nodejs6.11"
+  runtime: "nodejs6.10"
   handler_name: "handler"
 
 before_deploy:
