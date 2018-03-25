@@ -1,6 +1,8 @@
 language: node_js
 node_js:
   "6.11"
+script:
+  echo "OK"
 install:
   - npm install
 deploy:
@@ -10,5 +12,13 @@ deploy:
   function_name: "helpWantedBot"
   region: "us-east-2"
   role: $ROLE
+  publish: true
+  zip: deploy.zip
   runtime: "nodejs6.11"
   handler_name: "handler"
+
+before_deploy:
+  - zip -r deploy.zip index.js package.json node_modules/
+
+after_deploy:
+- unzip -l deploy.zip   
