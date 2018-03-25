@@ -22,7 +22,7 @@ function getNewIssue() {
     sort: "created"
   }).then(result => {
     const item = result.data.items[0];
-    postTweet(item.title + " " + item.html_url)
+    postTweet(item.title + " " + item.html_url + " #" + item.language)
   })
 }
 
