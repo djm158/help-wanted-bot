@@ -30,6 +30,24 @@ function postTweet(data) {
   Twitter.post('statuses/update', {
     status: data
   }, function (err, data, response) {
-    console.log(data)
+    if(err) {
+      throw new Error(err);
+    }
+    return(data)
   })
+}
+
+// AWS Lambda handler
+exports.handler = function (event, context, callback) {
+  octokit.search.issues({
+    q: query,
+    sort: "created"
+  }).then(result => {
+    const item = result.data.items[0];
+    return item.title + " " + item.html_url;
+  }).then(postTweet)
+  .then(result => {
+    callback(null, result);
+  })
+  .catch(err => callback(null, err))
 }
