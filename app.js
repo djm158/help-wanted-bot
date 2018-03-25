@@ -1,7 +1,7 @@
 const twit = require('twit');
 const octokit = require('@octokit/rest')();
 
-if(process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
 }
 
@@ -27,9 +27,9 @@ function getNewIssue() {
 }
 
 function postTweet(data) {
-  Twitter.post('statuses/update', { status: data }, function(err, data, response) {
+  Twitter.post('statuses/update', {
+    status: data
+  }, function (err, data, response) {
     console.log(data)
   })
 }
-
-setInterval(getNewIssue, repeatTime)
