@@ -1,0 +1,14 @@
+language: node_js
+node_js:
+  "6.11"
+install:
+  - npm install
+deploy:
+  provider: lambda
+  access_key_id: $AWS_ACCESS_KEY_ID
+  secret_access_key: $AWS_SECRET_ACCESS_KEY
+  function_name: "helpWantedBot"
+  region: "us-east-2"
+  role: $ROLE
+  runtime: "nodejs6.11"
+  handler_name: "handler"
