@@ -4,7 +4,6 @@
   "description": "twitter bot that tweets issues with tag 'help-wanted'",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js"
   },
   "keywords": [
