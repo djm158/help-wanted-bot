@@ -16,8 +16,6 @@ deploy:
   zip: deploy.zip
   runtime: "nodejs6.10"
   handler_name: "handler"
-  on:
-    all_branches: true;
 
 before_deploy:
   - zip -r deploy.zip index.js package.json node_modules/
