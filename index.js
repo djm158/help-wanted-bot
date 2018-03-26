@@ -14,16 +14,32 @@ const config = {
 
 const Twitter = new twit(config);
 const query = "label:\"help wanted\"+state:open"
-const repeatTime = 1000 * 60 * 10
 
 function getNewIssue() {
-  octokit.search.issues({
+  let tweetString = ""
+  return octokit.search.issues({
     q: query,
     sort: "created"
   }).then(result => {
     const item = result.data.items[0];
-    postTweet(item.title + " " + item.html_url + " #" + item.language)
+    tweetString = item.title + " " + item.html_url + " ";
+    // probably better to replace this w/ regex
+    const owner_repo = item.repository_url.substr(item.repository_url.indexOf("repos")+6).split('/');
+    const owner = owner_repo[0]
+    const repo = owner_repo[1]
+    octokit.repos.getLanguages({owner: owner, repo: repo})
+    .then(result => {
+      // languages are returned as object
+      let languages = Object.keys(result.data);
+      for(let i = 0; i < languages.length; i++) {
+        tweetString += "#" + languages[i] + " ";
+      }
+      tweetString += "#opensource";
+      return tweetString;
+    })
+    .then(postTweet)
   })
+  .catch(err => {return err})
 }
 
 function postTweet(data) {
@@ -39,15 +55,28 @@ function postTweet(data) {
 
 // AWS Lambda handler
 exports.handler = function (event, context, callback) {
-  octokit.search.issues({
+  let tweetString = ""
+  return octokit.search.issues({
     q: query,
     sort: "created"
   }).then(result => {
     const item = result.data.items[0];
-    return item.title + " " + item.html_url;
-  }).then(postTweet)
-  .then(result => {
-    callback(null, result);
+    tweetString = item.title + " " + item.html_url + " ";
+    // probably better to replace this w/ regex
+    const owner_repo = item.repository_url.substr(item.repository_url.indexOf("repos")+6).split('/');
+    const owner = owner_repo[0]
+    const repo = owner_repo[1]
+    octokit.repos.getLanguages({owner: owner, repo: repo})
+    .then(result => {
+      // languages are returned as object
+      let languages = Object.keys(result.data);
+      for(let i = 0; i < languages.length; i++) {
+        tweetString += "#" + languages[i] + " ";
+      }
+      return tweetString;
+    })
+    .then(postTweet)
+    .then(callback)
   })
-  .catch(err => callback(null, err))
+  .catch(err => {return err})
 }
