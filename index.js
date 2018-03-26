@@ -15,35 +15,35 @@ const config = {
 const Twitter = new twit(config);
 const query = "label:\"help wanted\"+state:open"
 
-function getNewIssue() {
-  let tweetString = ""
-  return octokit.search.issues({
-    q: query,
-    sort: "created"
-  }).then(result => {
-    const item = result.data.items[0];
-    tweetString = item.title + " " + item.html_url + " ";
-    // probably better to replace this w/ regex
-    const owner_repo = item.repository_url.split("https://api.github.com/repos/")[1].split('/');
-    const owner = owner_repo[0]
-    const repo = owner_repo[1]
-    octokit.repos.getLanguages({owner: owner, repo: repo})
-    .then(result => {
-      // languages are returned as object
-      let languages = Object.keys(result.data);
-      for(let i = 0; i < languages.length; i++) {
-        tweetString += "#" + languages[i] + " ";
-      }
-      tweetString += "#opensource";
-      // return tweetString;
-      console.log(tweetString)
-    })
-    // .then(postTweet)
-  })
-  .catch(err => {console.log(err)})
-}
+// function getNewIssue() {
+//   let tweetString = ""
+//   return octokit.search.issues({
+//     q: query,
+//     sort: "created"
+//   }).then(result => {
+//     const item = result.data.items[0];
+//     tweetString = item.title + " " + item.html_url + " ";
+//     // probably better to replace this w/ regex
+//     const owner_repo = item.repository_url.split("https://api.github.com/repos/")[1].split('/');
+//     const owner = owner_repo[0]
+//     const repo = owner_repo[1]
+//     octokit.repos.getLanguages({owner: owner, repo: repo})
+//     .then(result => {
+//       // languages are returned as object
+//       let languages = Object.keys(result.data);
+//       for(let i = 0; i < languages.length; i++) {
+//         tweetString += "#" + languages[i] + " ";
+//       }
+//       tweetString += "#opensource";
+//       // return tweetString;
+//       console.log(tweetString)
+//     })
+//     // .then(postTweet)
+//   })
+//   .catch(err => {console.log(err)})
+// }
 
-getNewIssue()
+// getNewIssue()
 
 function postTweet(data) {
   Twitter.post('statuses/update', {
