@@ -24,7 +24,7 @@ function getNewIssue() {
     const item = result.data.items[0];
     tweetString = item.title + " " + item.html_url + " ";
     // probably better to replace this w/ regex
-    const owner_repo = item.repository_url.substr(item.repository_url.indexOf("repos")+6).split('/');
+    const owner_repo = item.repository_url.split("https://api.github.com/repos/")[1].split('/');
     const owner = owner_repo[0]
     const repo = owner_repo[1]
     octokit.repos.getLanguages({owner: owner, repo: repo})
@@ -35,12 +35,15 @@ function getNewIssue() {
         tweetString += "#" + languages[i] + " ";
       }
       tweetString += "#opensource";
-      return tweetString;
+      // return tweetString;
+      console.log(tweetString)
     })
-    .then(postTweet)
+    // .then(postTweet)
   })
-  .catch(err => {return err})
+  .catch(err => {console.log(err)})
 }
+
+getNewIssue()
 
 function postTweet(data) {
   Twitter.post('statuses/update', {
@@ -63,7 +66,7 @@ exports.handler = function (event, context, callback) {
     const item = result.data.items[0];
     tweetString = item.title + " " + item.html_url + " ";
     // probably better to replace this w/ regex
-    const owner_repo = item.repository_url.substr(item.repository_url.indexOf("repos")+6).split('/');
+    const owner_repo = item.repository_url.split("https://api.github.com/repos/")[1].split('/');
     const owner = owner_repo[0]
     const repo = owner_repo[1]
     octokit.repos.getLanguages({owner: owner, repo: repo})
