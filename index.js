@@ -76,6 +76,7 @@ exports.handler = function (event, context, callback) {
       for(let i = 0; i < languages.length; i++) {
         tweetString += "#" + languages[i] + " ";
       }
+      tweetString + "#opensource"
       return tweetString;
     })
     .then(postTweet)
