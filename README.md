@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/djm158/help-wanted-bot.svg?branch=master)](https://travis-ci.org/djm158/help-wanted-bot)
+
 Twitter bot that searches github for issues with the label "help wanted"
 
 It currently fetches the newest issue from github's search api every ten minutes and tweets the title of the issue along with it's url. 
