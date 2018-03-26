@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-  "6.11"
+  "6.10"
 script:
   echo "OK"
 install:
@@ -16,6 +16,8 @@ deploy:
   zip: deploy.zip
   runtime: "nodejs6.10"
   handler_name: "handler"
+  on:
+    all_branches: true;
 
 before_deploy:
   - zip -r deploy.zip index.js package.json node_modules/
