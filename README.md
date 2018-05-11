@@ -2,7 +2,7 @@
 
 Twitter bot that searches github for issues with the label "help wanted"
 
-It currently fetches the newest issue from github's search api every ten minutes and tweets the title of the issue along with it's url. 
+It currently fetches the newest issue from [GitHub's search api](https://developer.github.com/v3/search/) every ten minutes and tweets the title of the issue along with it's url. 
 
 https://twitter.com/helpwantedbot
 
