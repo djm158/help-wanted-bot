@@ -1,5 +1,7 @@
 const twit = require('twit');
-const octokit = require('@octokit/rest')();
+const { Octokit } = require("@octokit/rest");
+
+const octokit = new Octokit()
 
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
@@ -19,38 +21,39 @@ function postTweet(data) {
   Twitter.post('statuses/update', {
     status: data
   }, function (err, data, response) {
-    if(err) {
+    if (err) {
       throw new Error(err);
     }
-    return(data)
+    return (data)
   })
 }
 
 // AWS Lambda handler
 exports.handler = function (event, context, callback) {
   let tweetString = ""
-  return octokit.search.issues({
+  return octokit.search.issuesAndPullRequests({
     q: query,
     sort: "created"
   }).then(result => {
     const item = result.data.items[0];
+
     tweetString = item.title + " " + item.html_url + " ";
     // probably better to replace this w/ regex
     const owner_repo = item.repository_url.split("https://api.github.com/repos/")[1].split('/');
     const owner = owner_repo[0]
     const repo = owner_repo[1]
-    octokit.repos.getLanguages({owner: owner, repo: repo})
-    .then(result => {
-      // languages are returned as object
-      let languages = Object.keys(result.data);
-      for(let i = 0; i < languages.length; i++) {
-        tweetString += "#" + languages[i] + " ";
-      }
-      tweetString += "#opensource"
-      return tweetString;
-    })
-    .then(postTweet)
-    .then(callback)
+    octokit.repos.listLanguages({ owner: owner, repo: repo })
+      .then(result => {
+        // languages are returned as object
+        let languages = Object.keys(result.data);
+        for (let i = 0; i < languages.length; i++) {
+          tweetString += "#" + languages[i] + " ";
+        }
+        tweetString += "#opensource"
+        return tweetString;
+      })
+      .then(postTweet)
+      .then(callback)
   })
-  .catch(err => {return err})
+    .catch(err => { return err })
 }
