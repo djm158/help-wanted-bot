@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-  "6.10"
+  "14.10"
 script:
   echo "OK"
 install:
@@ -21,4 +21,4 @@ before_deploy:
   - zip -r deploy.zip index.js package.json node_modules/
 
 after_deploy:
-- unzip -l deploy.zip   
+- unzip -l deploy.zip
