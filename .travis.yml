@@ -14,7 +14,7 @@ deploy:
   role: $ROLE
   publish: true
   zip: deploy.zip
-  runtime: "nodejs14.10"
+  runtime: "nodejs14.x"
   handler_name: "handler"
 
 before_deploy:
