@@ -15,45 +15,35 @@ const config = {
 }
 
 const Twitter = new twit(config);
-const query = "label:\"help wanted\"+state:open"
+const QUERY = "label:\"help wanted\"+state:open"
 
-function postTweet(data) {
+const postTweet = (tweet) =>
   Twitter.post('statuses/update', {
-    status: data
-  }, function (err, data, response) {
+    status: tweet
+  }, (err, data, response) => {
     if (err) {
       throw new Error(err);
     }
     return (data)
   })
-}
 
 // AWS Lambda handler
-exports.handler = function (event, context, callback) {
+exports.handler = async (event, context) => {
   let tweetString = ""
-  return octokit.search.issuesAndPullRequests({
-    q: query,
-    sort: "created"
-  }).then(result => {
-    const item = result.data.items[0];
 
-    tweetString = item.title + " " + item.html_url + " ";
-    // probably better to replace this w/ regex
-    const owner_repo = item.repository_url.split("https://api.github.com/repos/")[1].split('/');
-    const owner = owner_repo[0]
-    const repo = owner_repo[1]
-    octokit.repos.listLanguages({ owner: owner, repo: repo })
-      .then(result => {
-        // languages are returned as object
-        let languages = Object.keys(result.data);
-        for (let i = 0; i < languages.length; i++) {
-          tweetString += "#" + languages[i] + " ";
-        }
-        tweetString += "#opensource"
-        return tweetString;
-      })
-      .then(postTweet)
-      .then(callback)
+  const { data: issues } = await octokit.search.issuesAndPullRequests({
+    q: QUERY,
+    sort: "created"
   })
-    .catch(err => { return err })
+  const [item] = issues.items;
+
+  tweetString = item.title + " " + item.html_url + " ";
+  // probably better to replace this w/ regex
+  const owner_repo = item.repository_url.split("https://api.github.com/repos/")[1].split('/');
+  const [owner, repo] = owner_repo
+
+  const { data: languages } = await octokit.repos.listLanguages({ owner, repo })
+  Object.keys(languages).forEach(language => tweetString += "#" + language + " ")
+  tweetString += "#opensource"
+  return postTweet(tweetString)
 }
