@@ -38,11 +38,11 @@ const QUERY = "label:\"help wanted\"+state:open"
  * @param {*} status string
  * @returns Promise
  */
-const tweet = async (status) =>
-  Twitter.post('statuses/update', {
+const tweet = async (status) => {
+  return Twitter.post('statuses/update', {
     status
   })
-
+}
 
 /**
  *
@@ -86,8 +86,9 @@ exports.handler = async (event, context) => {
 
   const [issue] = issues.items;
 
+
   if (currentId !== issue.id) {
-    const status = buildStatus(issue)
+    const status = await buildStatus(issue)
     const tweetResponse = await tweet(status).catch((err) => (err instanceof Error ? err : new Error(JSON.stringify(err))))
 
     if (tweetResponse instanceof Error) throw tweetResponse
